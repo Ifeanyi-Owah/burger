@@ -1,20 +1,24 @@
-const express = require("express");
+var express = require("express");
 
-
-var PORT = process.env.PORT || 3000;
+var PORT = process.env.PORT || 8000;
 var app = express();
 
+// Serve static content for the app from the "public" directory in the application directory.
 app.use(express.static("public"));
+
+// Parse application body
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-const expressHbs = require("express-handlebars");
-app.engine("handlebars", expressHbs({defaultLayout:'main'}));
-app.set("view engine","handlebars");
+var exphbs = require("express-handlebars");
 
-var burgerRoutes = require("./controllers/burgers_controller");
+app.engine("handlebars", exphbs({ defaultLayout: "main" }));
+app.set("view engine", "handlebars");
 
-app.use(burgerRoutes);
+var routes = require("./controllers/burgersController.js");
 
-app.listen(PORT,function(){
-    console.log("listening on port:%s",PORT);
-})
+app.use(routes);
+
+app.listen(PORT, function() {
+  console.log("Listening on port:%s", PORT);
+});
